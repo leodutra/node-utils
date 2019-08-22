@@ -69,12 +69,12 @@ function matchPattern (str, regexp) {
     const regexpClone = new RegExp(
         regexp.source,
         regexp.flags ||
-            (regexp.global ? 'g' : '') +
-            (regexp.ignoreCase ? 'i' : '') +
-            (regexp.multiline ? 'm' : '') +
-            (regexp.dotAll ? 's' : '') +
-            (regexp.unicode ? 'u' : '') +
-            (regexp.sticky ? 'y' : '')
+        (regexp.global ? 'g' : '') +
+        (regexp.ignoreCase ? 'i' : '') +
+        (regexp.multiline ? 'm' : '') +
+        (regexp.dotAll ? 's' : '') +
+        (regexp.unicode ? 'u' : '') +
+        (regexp.sticky ? 'y' : '')
     )
     regexpClone.lastIndex = 0
     const matches = []
@@ -93,8 +93,8 @@ function matchPattern (str, regexp) {
 
 function parseNumber (str) {
     str = (str + '').replace(/[^\d,.-]/g, '') // just digits, separators and sign
-    var sign = str.charAt(0) === '-' ? '-' : '+' // store sign
-    var minor = str.match(/[.,](\d+)$/) // filter decimals
+    const sign = str.charAt(0) === '-' ? '-' : '+' // store sign
+    const minor = str.match(/[.,](\d+)$/) // filter decimals
     str = str.replace(/[.,]\d*$/, '').replace(/\D/g, '') // remove decimals and any integer separator
     return Number(sign + str + (minor ? '.' + minor[1] : '')) // build number
 }
@@ -156,32 +156,72 @@ function randomInRange (min, max) {
         : min
 }
 
+function bufferFromDataURI (dataURI) {
+    const [, mimeType, encoding, data] = dataURI.match(
+        /^data:((?:[^,](?!,|;base64))*[^,])?(?:;(base64))?,(.+)/im
+    )
+    return {
+        mimeType: mimeType,
+        data: encoding
+            ? Buffer.from(data, encoding)
+            : data
+    }
+}
+
+function randomBase62 (numDigits) {
+    numDigits = numDigits >> 0
+    const base62 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    let result = ''
+    while (numDigits--) {
+        result += base62[Math.random() * 61 >> 0]
+    }
+    return result
+}
+
+function toCharEntity (str, toHex) {
+    if (str) {
+        str = '' + str
+        let codeCache
+        let res = ''
+        for (let i = 0, l = str.length; i < l;) {
+            res += '&#'
+            codeCache = str.charCodeAt(i++)
+            res += toHex ? 'x' + codeCache.toString('16') : codeCache
+            res += ';'
+        }
+        return res
+    }
+}
+
 module.exports = {
+    baseX,
+    bufferFromDataURI,
     buildJwt,
-    requireEnvVar,
-    getEnvironment,
-    genUuidv1,
-    genUuidv4,
+    clamp,
+    comparePassword,
+    createCurrencyFormatter,
+    decodeHTMLEntities,
+    deepFreeze,
+    fixedDecimal,
     genBase62Uuidv1,
     genBase62Uuidv4,
-    deepFreeze,
-    stringify,
-    hashPasswordSync,
+    genUuidv1,
+    genUuidv4,
+    getEnvironment,
     hashPassword,
-    comparePassword,
-    matchPattern,
-    parseNumber,
-    writeFileAsync,
-    readFileAsync,
-    decodeHTMLEntities,
-    replaceHTMLTags,
-    removeDiacritics,
-    baseX,
-    clamp,
-    numf,
-    createCurrencyFormatter,
+    hashPasswordSync,
     kelvinToCelsius,
+    matchPattern,
     metersToKmPerHour,
-    fixedDecimal,
-    randomInRange
+    numf,
+    parseNumber,
+    randomBase62,
+    randomInRange,
+    readFileAsync,
+    removeDiacritics,
+    replaceHTMLTags,
+    requireEnvVar,
+    stringify,
+    toCharEntity,
+    writeFileAsync
 }
