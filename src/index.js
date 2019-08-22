@@ -1,4 +1,5 @@
 const fs = require('fs')
+const fsPromises = fs.promises
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const uuid = require('uuid')
@@ -53,12 +54,12 @@ function stringify (obj, replacer, spaces) {
     return safeStringify(obj, replacer, spaces)
 }
 
-function hashPasswordSync (password) {
-    return bcrypt.hashSync(password, DEFAULT_SALT_ROUNDS)
+function hashPasswordSync (password, saltOrRounds = DEFAULT_SALT_ROUNDS) {
+    return bcrypt.hashSync(password, saltOrRounds)
 }
 
-async function hashPassword (password) {
-    return bcrypt.hash(password, DEFAULT_SALT_ROUNDS)
+async function hashPassword (password, saltOrRounds = DEFAULT_SALT_ROUNDS) {
+    return bcrypt.hash(password, saltOrRounds)
 }
 
 async function comparePassword (password, passwordHash) {
@@ -97,20 +98,12 @@ function parseNumber (str) {
     return Number(sign + str + (minor ? '.' + minor[1] : '')) // build number
 }
 
-async function writeFileAsync (file, data, options) {
-    return new Promise((resolve, reject) =>
-        fs.writeFile(file, data, options, error =>
-            error ? reject(error) : resolve()
-        )
-    )
+async function writeFile (file, data, options) {
+    return fsPromises.writeFile(file, data, options)
 }
 
-async function readFileAsync (file, options) {
-    return new Promise((resolve, reject) =>
-        fs.readFile(file, options, (error, data) =>
-            error ? reject(error) : resolve(data)
-        )
-    )
+async function readFile (file, options) {
+    return fsPromises.readFile(file, options)
 }
 
 function replaceHTMLTags (text) {
@@ -215,11 +208,11 @@ module.exports = {
     parseNumber,
     randomBase62,
     randomInRange,
-    readFileAsync,
+    readFile,
     removeDiacritics,
     replaceHTMLTags,
     requireEnvVar,
     stringify,
     toCharEntity,
-    writeFileAsync
+    writeFile
 }
