@@ -83,10 +83,8 @@ function matchPattern (str, regexp) {
         while ((match = regexpClone.exec(str))) {
             matches.push(match)
         }
-    } else {
-        if ((match = regexpClone.exec(str))) {
-            matches.push(match)
-        }
+    } else if ((match = regexpClone.exec(str))) {
+        matches.push(match)
     }
     return matches
 }
