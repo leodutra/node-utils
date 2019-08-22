@@ -160,7 +160,6 @@ function bufferFromDataURI (dataURI) {
 }
 
 function randomBase62 (numDigits) {
-    numDigits = numDigits >> 0
     const base62 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     let result = ''
     while (numDigits--) {
