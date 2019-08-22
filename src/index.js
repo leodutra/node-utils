@@ -6,6 +6,7 @@ const uuid = require('uuid')
 const deepFreezeLib = require('deep-freeze')
 const safeStringify = require('fast-safe-stringify')
 const baseX = require('base-x')
+const path = require('path')
 
 const numf = require('./numf')
 const removeDiacritics = require('./remove-diacritics')
@@ -183,6 +184,19 @@ function toCharEntity (str, toHex) {
     }
 }
 
+function findPackageJson (startDir) {
+    let dir = path.resolve(startDir || process.cwd())
+    do {
+        const pkgfile = path.join(dir, 'package.json')
+        if (fs.existsSync(pkgfile)) {
+            return pkgfile
+        } else {
+            dir = path.join(dir, '..')
+        }
+    } while (dir !== path.resolve(dir, '..'))
+    return null
+}
+
 module.exports = {
     baseX,
     bufferFromDataURI,
@@ -192,6 +206,7 @@ module.exports = {
     createCurrencyFormatter,
     decodeHTMLEntities,
     deepFreeze,
+    findPackageJson,
     fixedDecimal,
     genBase62Uuidv1,
     genBase62Uuidv4,
