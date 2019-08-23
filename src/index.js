@@ -231,6 +231,14 @@ function typify (any, ownProperties) {
     return t
 }
 
+function limitStringBy (num, str, complement) {
+    if (str.length > num) {
+        const k = str.substr(0, num).lastIndexOf('\u0020')
+        return str.substr(0, k !== -1 ? k : num) + (complement || '...')
+    }
+    return str
+}
+
 module.exports = {
     baseX,
     bufferFromDataURI,
@@ -252,6 +260,7 @@ module.exports = {
     hashPassword,
     hashPasswordSync,
     kelvinToCelsius,
+    limitStringBy,
     matchPattern,
     metersToKmPerHour,
     numf,
