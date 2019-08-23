@@ -10,7 +10,7 @@ const path = require('path')
 
 const numf = require('./numf')
 const removeDiacritics = require('./remove-diacritics')
-const decodeHTMLEntities = require('./decode-html-entities')
+const { decodeHTMLEntities, encodeHTMLEntities } = require('./encode-decode-html')
 
 const base62 = baseX('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 const DEFAULT_SALT_ROUNDS = 12
@@ -240,6 +240,7 @@ module.exports = {
     createCurrencyFormatter,
     decodeHTMLEntities,
     deepFreeze,
+    encodeHTMLEntities,
     findPackageJson,
     fixedDecimal,
     genBase62Uuidv1,
