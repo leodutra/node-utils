@@ -197,6 +197,40 @@ function findPackageJson (startDir) {
     return null
 }
 
+function getClassName (any) {
+    switch (typeof any) {
+    case 'number':
+        return isNaN(any) ? 'NaN' : 'Number'
+    case 'undefined':
+        return void 0
+    case 'string':
+    case 'function':
+    case 'boolean':
+    case 'bigint':
+    case 'symbol':
+    default:
+    case 'object':
+        return any == null
+            ? null
+            : Object.getPrototypeOf(any).constructor.name
+    }
+}
+
+function typify (any, ownProperties) {
+    const t = getClassName(any)
+    if (t === 'Object') {
+        const result = {}
+        for (const prop in any) {
+            if (ownProperties && !Object.prototype.hasOwnProperty.call(any, prop)) {
+                continue
+            }
+            result[prop] = getClassName(any[prop])
+        }
+        return result
+    }
+    return t
+}
+
 module.exports = {
     baseX,
     bufferFromDataURI,
@@ -212,6 +246,7 @@ module.exports = {
     genBase62Uuidv4,
     genUuidv1,
     genUuidv4,
+    getClassName,
     getEnvironment,
     hashPassword,
     hashPasswordSync,
@@ -228,5 +263,6 @@ module.exports = {
     requireEnvVar,
     stringify,
     toCharEntity,
+    typify,
     writeFile
 }
