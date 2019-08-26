@@ -1,4 +1,4 @@
-function numf (number, decimals = null, decPoint = '.', thousandsSep = ',') {
+module.exports = function numf (number, decimals = null, decPoint = '.', thousandsSep = ',') {
     // discuss at: http://locutus.io/php/number_format/
     // original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
     // improved by: Kevin van Zonneveld (http://kvz.io)
@@ -75,5 +75,3 @@ function numf (number, decimals = null, decPoint = '.', thousandsSep = ',') {
     }
     return s.join(decPoint)
 }
-
-module.exports = numf
