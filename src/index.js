@@ -18,6 +18,48 @@ const base62 = baseX('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 
 let dotEnvOutput = null
 
+module.exports = {
+    baseX,
+    bufferFromDataURI,
+    buildJwt,
+    bytesToStr,
+    clamp,
+    comparePassword,
+    createCurrencyFormatter,
+    decodeHTMLEntities,
+    deepFreeze,
+    encodeHTMLEntities,
+    findPackageJson,
+    fixedDecimal,
+    genBase62Uuidv1,
+    genBase62Uuidv4,
+    genUuidv1,
+    genUuidv4,
+    getClassName,
+    getEnvironment,
+    hashPassword,
+    hashPasswordSync,
+    kelvinToCelsius,
+    limitStringBy,
+    loadDotEnv,
+    matchPattern,
+    metersToKmPerHour,
+    numf,
+    parseNumber,
+    randomBase62,
+    randomInRange,
+    readFile,
+    removeDiacritics,
+    replaceHTMLTags,
+    requireEnvVar,
+    stringify,
+    toCharEntity,
+    toImmutableProxy,
+    toUnicode,
+    typify,
+    writeFile
+}
+
 function loadDotEnv () {
     if (dotEnvOutput) return dotEnvOutput
     dotEnvOutput = dotEnv.config({ debug: process.env.DEBUG })
@@ -277,43 +319,10 @@ function toImmutableProxy (any) {
     return any
 }
 
-module.exports = {
-    baseX,
-    bufferFromDataURI,
-    buildJwt,
-    clamp,
-    comparePassword,
-    createCurrencyFormatter,
-    decodeHTMLEntities,
-    deepFreeze,
-    encodeHTMLEntities,
-    findPackageJson,
-    fixedDecimal,
-    genBase62Uuidv1,
-    genBase62Uuidv4,
-    genUuidv1,
-    genUuidv4,
-    getClassName,
-    getEnvironment,
-    hashPassword,
-    hashPasswordSync,
-    kelvinToCelsius,
-    limitStringBy,
-    loadDotEnv,
-    matchPattern,
-    metersToKmPerHour,
-    numf,
-    parseNumber,
-    randomBase62,
-    randomInRange,
-    readFile,
-    removeDiacritics,
-    replaceHTMLTags,
-    requireEnvVar,
-    stringify,
-    toCharEntity,
-    toImmutableProxy,
-    toUnicode,
-    typify,
-    writeFile
+function bytesToStr (bytes) {
+    let str = ''
+    for (let i = 0, l = bytes.length; i < l;) {
+        str += String.fromCharCode(bytes[i++])
+    }
+    return str
 }
