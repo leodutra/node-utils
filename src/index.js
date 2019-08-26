@@ -1,19 +1,31 @@
+const baseX = require('base-x')
+const bcrypt = require('bcrypt')
+const deepFreezeLib = require('deep-freeze')
+const dotEnv = require('dotenv')
 const fs = require('fs')
 const fsPromises = fs.promises
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const uuid = require('uuid')
-const deepFreezeLib = require('deep-freeze')
-const safeStringify = require('fast-safe-stringify')
-const baseX = require('base-x')
 const path = require('path')
+const safeStringify = require('fast-safe-stringify')
+const uuid = require('uuid')
 
 const numf = require('./numf')
 const removeDiacritics = require('./remove-diacritics')
 const { decodeHTMLEntities, encodeHTMLEntities } = require('./encode-decode-html')
 
-const base62 = baseX('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 const DEFAULT_SALT_ROUNDS = 12
+const base62 = baseX('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+
+let dotEnvOutput = null
+
+function loadDotEnv () {
+    if (dotEnvOutput) return dotEnvOutput
+    dotEnvOutput = dotEnv.config({ debug: process.env.DEBUG })
+    if (dotEnvOutput.error) {
+        throw dotEnvOutput.error
+    }
+    return dotEnvOutput
+}
 
 function buildJwt (payload, secret, options) {
     if (!options || !options.expiresIn) throw new TypeError(`Missing "expiresIn" for ${buildJwt.name}()`)
@@ -21,6 +33,7 @@ function buildJwt (payload, secret, options) {
 }
 
 function requireEnvVar (name) {
+    loadDotEnv()
     if (typeof name !== 'string') throw new TypeError(`Invalid name "${name}" for ${requireEnvVar.name}().`)
     const value = process.env[name]
     if (value) return value
@@ -28,6 +41,7 @@ function requireEnvVar (name) {
 }
 
 function getEnvironment () {
+    loadDotEnv()
     return process.env.NODE_ENV || 'development'
 }
 
@@ -288,6 +302,7 @@ module.exports = {
     hashPasswordSync,
     kelvinToCelsius,
     limitStringBy,
+    loadDotEnv,
     matchPattern,
     metersToKmPerHour,
     numf,
