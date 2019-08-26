@@ -16,9 +16,11 @@ const { decodeHTMLEntities, encodeHTMLEntities } = require('./encode-decode-html
 const DEFAULT_SALT_ROUNDS = 12
 const base62 = baseX('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
-let dotEnvOutput = null
+let dotEnvOutput
+let ansiColor
 
 module.exports = {
+    ansiColor,
     baseX,
     bufferFromDataURI,
     buildJwt,
@@ -325,4 +327,47 @@ function bytesToStr (bytes) {
         str += String.fromCharCode(bytes[i++])
     }
     return str
+}
+
+ansiColor = {
+    black: genAnsiColor([0, 0]),
+    red: genAnsiColor([31, 39]),
+    green: genAnsiColor([32, 39]),
+    yellow: genAnsiColor([33, 39]),
+    blue: genAnsiColor([34, 39]),
+    magenta: genAnsiColor([35, 39]),
+    cyan: genAnsiColor([36, 39]),
+    white: genAnsiColor([37, 39]),
+    gray: genAnsiColor([90, 39]),
+    grey: genAnsiColor([90, 39]),
+    bgBlack: genAnsiColor([40, 49]),
+    bgRed: genAnsiColor([41, 49]),
+    bgGreen: genAnsiColor([42, 49]),
+    bgYellow: genAnsiColor([43, 49]),
+    bgBlue: genAnsiColor([44, 49]),
+    bgMagenta: genAnsiColor([45, 49]),
+    bgCyan: genAnsiColor([46, 49]),
+    bgWhite: genAnsiColor([47, 49]),
+    blackBright: genAnsiColor([90, 39]),
+    redBright: genAnsiColor([91, 39]),
+    greenBright: genAnsiColor([92, 39]),
+    yellowBright: genAnsiColor([93, 39]),
+    blueBright: genAnsiColor([94, 39]),
+    magentaBright: genAnsiColor([95, 39]),
+    cyanBright: genAnsiColor([96, 39]),
+    whiteBright: genAnsiColor([97, 39]),
+    bgBlackBright: genAnsiColor([100, 49]),
+    bgRedBright: genAnsiColor([101, 49]),
+    bgGreenBright: genAnsiColor([102, 49]),
+    bgYellowBright: genAnsiColor([103, 49]),
+    bgBlueBright: genAnsiColor([104, 49]),
+    bgMagentaBright: genAnsiColor([105, 49]),
+    bgCyanBright: genAnsiColor([106, 49]),
+    bgWhiteBright: genAnsiColor([107, 49])
+}
+
+function genAnsiColor (codes) {
+    const open = `\u001b[${codes[0]}m`
+    const close = `\u001b[${codes[1]}m`
+    return input => open + input + close
 }
