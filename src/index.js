@@ -28,13 +28,17 @@ function loadDotEnv () {
 }
 
 function buildJwt (payload, secret, options) {
-    if (!options || !options.expiresIn) throw new TypeError(`Missing "expiresIn" for ${buildJwt.name}()`)
+    if (!options || !options.expiresIn) {
+        throw new TypeError(`Missing "expiresIn" for ${buildJwt.name}()`)
+    }
     return jwt.sign(payload, secret, { expiresIn: options.expiresIn })
 }
 
 function requireEnvVar (name) {
     loadDotEnv()
-    if (typeof name !== 'string') throw new TypeError(`Invalid name "${name}" for ${requireEnvVar.name}().`)
+    if (typeof name !== 'string') {
+        throw new TypeError(`Invalid name "${name}" for ${requireEnvVar.name}().`)
+    }
     const value = process.env[name]
     if (value) return value
     throw new Error(`Missing environment value for ${name}`)
@@ -145,8 +149,8 @@ function kelvinToCelsius (kelvinTemp) {
     return kelvinTemp - 273.15
 }
 
-function metersToKmPerHour (ms) {
-    return ms * 3.6
+function metersToKmPerHour (metersPerSecond) {
+    return metersPerSecond * 3.6
 }
 
 function fixedDecimal (n, val) {
@@ -184,18 +188,11 @@ function randomBase62 (numDigits) {
 }
 
 function toCharEntity (str, toHex) {
-    if (str) {
-        str = '' + str
-        let codeCache
-        let res = ''
-        for (let i = 0, l = str.length; i < l;) {
-            res += '&#'
-            codeCache = str.charCodeAt(i++)
-            res += toHex ? 'x' + codeCache.toString('16') : codeCache
-            res += ';'
-        }
-        return res
+    let result = ''
+    for (let i = 0, l = str.length; i < l;) {
+        result += `&#${toHex ? 'x' + str.charCodeAt(i++).toString('16') : str.charCodeAt(i++)};`
     }
+    return result
 }
 
 function findPackageJson (startDir) {
