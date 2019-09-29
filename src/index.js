@@ -26,6 +26,7 @@ module.exports = {
     loadDotEnv: require('./loadDotEnv'),
     matchPattern: require('./matchPattern'),
     metersToKmPerHour: require('./metersToKmPerHour'),
+    mkdirp: require('./mkdirp'),
     numf: require('./numf'),
     parseNumber: require('./parseNumber'),
     randomBase62: require('./randomBase62'),
@@ -34,10 +35,12 @@ module.exports = {
     removeDiacritics: require('./removeDiacritics'),
     replaceHTMLTags: require('./replaceHTMLTags'),
     requireEnvVar: require('./requireEnvVar'),
+    rimraf: require('./rimraf'),
     stringify: require('./stringify'),
     toCharEntity: require('./toCharEntity'),
     toImmutableProxy: require('./toImmutableProxy'),
     toUnicode: require('./toUnicode'),
+    trimToLower: require('./trimToLower'),
     typify: require('./typify'),
     writeFile: require('./writeFile')
 }
