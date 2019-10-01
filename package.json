@@ -27,9 +27,11 @@
   "dependencies": {
     "base-x": "^3.0.6",
     "bcrypt": "^3.0.6",
+    "cli-progress": "^3.3.0",
     "deep-freeze": "0.0.1",
     "dotenv": "^8.0.0",
     "fast-safe-stringify": "^2.0.6",
+    "got": "^9.6.0",
     "jsonwebtoken": "^8.5.1",
     "mkdirp": "^0.5.1",
     "require-dir": "^1.2.0",

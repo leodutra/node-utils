@@ -10,6 +10,7 @@ module.exports = {
     createCurrencyFormatter: require('./createCurrencyFormatter'),
     decodeHTMLEntities: require('./decodeHTMLEntities'),
     deepFreeze: require('./deepFreeze'),
+    downloadFile: require('./downloadFile'),
     encodeHTMLEntities: require('./encodeHTMLEntities'),
     findPackageJson: require('./findPackageJson'),
     fixedDecimal: require('./fixedDecimal'),
