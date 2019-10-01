@@ -12,6 +12,7 @@ module.exports = {
     deepFreeze: require('./deepFreeze'),
     downloadFile: require('./downloadFile'),
     encodeHTMLEntities: require('./encodeHTMLEntities'),
+    fetchJSONP: require('./fetchJSONP'),
     findPackageJson: require('./findPackageJson'),
     fixedDecimal: require('./fixedDecimal'),
     genBase62Uuidv1: require('./genBase62Uuidv1'),
