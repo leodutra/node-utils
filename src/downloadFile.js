@@ -10,15 +10,16 @@ const downloadBars = new _cliProgress.MultiBar({
 }, _cliProgress.Presets.shades_grey)
 
 module.exports = async function downloadFile (url, opts = {}) {
-    const {
-        cliProgress = true,
-        filePath = filenameFromURL(url)
-    } = opts
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
+        let {
+            cliProgress = true,
+            filePath = filenameFromURL(url)
+        } = opts
+        filePath = uniqueFilePath(filePath)
         let file
         try {
-            file = fs.createWriteStream(uniqueFilePath(filePath), { flags: 'ax' })
+            file = fs.createWriteStream(filePath, { flags: 'ax' })
         } catch (error) {
             return reject(error)
         }
@@ -41,6 +42,7 @@ module.exports = async function downloadFile (url, opts = {}) {
             })
         }
         const onError = async error => {
+            if (progressBar) progressBar.stop()
             await fs.promises.unlink(filePath)
             reject(error)
         }
@@ -48,9 +50,7 @@ module.exports = async function downloadFile (url, opts = {}) {
         const stream = await gotPromise
         stream.pipe(file)
             .on('finish', () => {
-                if (progressBar) {
-                    progressBar.stop()
-                }
+                if (progressBar) progressBar.stop()
                 file.close(resolve)
             })
             .on('error', onError)
