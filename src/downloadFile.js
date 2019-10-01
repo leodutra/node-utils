@@ -5,6 +5,7 @@ const path = require('path')
 
 const downloadBars = new _cliProgress.MultiBar({
     format: 'Downloading: {bar} {percentage}% | {filename} | ETA: {eta_formatted} | {value}/{total} bytes',
+    stopOnComplete: true,
     clearOnComplete: false,
     hideCursor: true
 }, _cliProgress.Presets.shades_grey)
@@ -34,15 +35,13 @@ module.exports = async function downloadFile (url, opts = {}) {
                         progress.total,
                         progress.transferred,
                         {
-                            filename: path.basename(filePath),
-                            percent: 0
+                            filename: path.basename(filePath)
                         }
                     )
                 }
             })
         }
         const onError = async error => {
-            if (progressBar) progressBar.stop()
             await fs.promises.unlink(filePath)
             reject(error)
         }
@@ -50,7 +49,7 @@ module.exports = async function downloadFile (url, opts = {}) {
         const stream = await gotPromise
         stream.pipe(file)
             .on('finish', () => {
-                if (progressBar) progressBar.stop()
+                downloadBars.update()
                 file.close(resolve)
             })
             .on('error', onError)
