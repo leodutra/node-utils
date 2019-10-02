@@ -11,23 +11,17 @@ const downloadBars = new _cliProgress.MultiBar({
 }, _cliProgress.Presets.shades_grey)
 
 module.exports = async function downloadFile (url, opts = {}) {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let {
             cliProgress = true,
             filePath = filenameFromURL(url)
         } = opts
         filePath = uniqueFilePath(filePath)
-        let file
-        try {
-            file = fs.createWriteStream(filePath, { flags: 'ax' })
-        } catch (error) {
-            return reject(error)
-        }
-        const gotPromise = got(url, { stream: true })
-        let progressBar
+        const fileOutputStream = fs.createWriteStream(filePath, { flags: 'ax' })
+        const dataInputStream = got.stream(url)
         if (cliProgress) {
-            gotPromise.on('downloadProgress', progress => {
+            let progressBar
+            dataInputStream.on('downloadProgress', progress => {
                 if (progressBar) {
                     progressBar.update(progress.transferred)
                 } else {
@@ -41,18 +35,21 @@ module.exports = async function downloadFile (url, opts = {}) {
                 }
             })
         }
-        const onError = async error => {
-            await fs.promises.unlink(filePath)
-            reject(error)
+        const onError = error => {
+            console.log('Download: error...')
+            fs.unlink(filePath, (err) => {
+                if (err) console.error(err)
+                reject(error)
+            })
         }
-        gotPromise.on('error', onError)
-        const stream = await gotPromise
-        stream.pipe(file)
+        dataInputStream
+            .on('error', onError)
+            .pipe(fileOutputStream)
+            .on('error', onError)
             .on('finish', () => {
                 downloadBars.update()
-                file.close(resolve)
+                fileOutputStream.close(resolve)
             })
-            .on('error', onError)
     })
 }
 
