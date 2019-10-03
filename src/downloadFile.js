@@ -36,7 +36,6 @@ module.exports = async function downloadFile (url, opts = {}) {
             })
         }
         const onError = error => {
-            console.log('Download: error...')
             fs.unlink(filePath, (err) => {
                 if (err) console.error(err)
                 reject(error)
