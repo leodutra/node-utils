@@ -24,6 +24,7 @@ module.exports = {
     hashPassword: require('./hashPassword'),
     hashPasswordSync: require('./hashPasswordSync'),
     kelvinToCelsius: require('./kelvinToCelsius'),
+    lazyTemplate: require('./lazyTemplate'),
     limitStringBy: require('./limitStringBy'),
     loadDotEnv: require('./loadDotEnv'),
     matchPattern: require('./matchPattern'),
