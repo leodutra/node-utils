@@ -35,20 +35,20 @@ module.exports = async function downloadFile (url, opts = {}) {
                 }
             })
         }
-        const onError = error => {
-            fs.unlink(filePath, (err) => {
-                if (err) console.error(err)
-                reject(error)
-            })
-        }
         dataInputStream
-            .on('error', onError)
-            .pipe(fileOutputStream)
-            .on('error', onError)
-            .on('finish', () => {
-                downloadBars.update()
-                fileOutputStream.close(resolve)
+            .once('error', error => {
+                fs.unlink(filePath, err => {
+                    if (err) console.error(err)
+                    fileOutputStream.close()
+                    reject(error)
+                })
             })
+            .pipe(fileOutputStream)
+                .on('close', () => {
+                    downloadBars.update()
+                    resolve()
+                })
+                
     })
 }
 
