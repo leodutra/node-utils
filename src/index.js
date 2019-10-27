@@ -45,5 +45,6 @@ module.exports = {
     toUnicode: require('./toUnicode'),
     trimToLower: require('./trimToLower'),
     typify: require('./typify'),
-    writeFile: require('./writeFile')
+    urlExtension: require('./urlExtension'),
+    writeFile: require('./writeFile'),
 }
