@@ -45,7 +45,11 @@ module.exports = async function downloadFile (url, opts = {}) {
             })
             .pipe(fileOutputStream)
                 .on('close', () => {
-                    downloadBars.update()
+                    if (cliProgress) {
+                        downloadBars.update()
+                    } else {
+                        console.log(`Downloaded file: ${filePath}\n\tfrom: ${url}`)
+                    }
                     resolve()
                 })
                 
