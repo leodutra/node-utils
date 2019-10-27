@@ -5,6 +5,7 @@ module.exports = {
     bufferFromDataURI: require('./bufferFromDataURI'),
     buildJwt: require('./buildJwt'),
     bytesToStr: require('./bytesToStr'),
+    celsiusToKelvin: require('./celsiusToKelvin'),
     clamp: require('./clamp'),
     comparePassword: require('./comparePassword'),
     createCurrencyFormatter: require('./createCurrencyFormatter'),
