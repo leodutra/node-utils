@@ -17,11 +17,11 @@ module.exports = async function downloadFile (url, opts = {}) {
             filePath = filenameFromURL(url)
         } = opts
         filePath = uniqueFilePath(filePath)
-        const fileOutputStream = fs.createWriteStream(filePath)
-        const dataInputStream = got.stream(url)
+        const fileWritableStream = fs.createWriteStream(filePath)
+        const dataReadableStream = got.stream(url)
         if (cliProgress) {
             let progressBar
-            dataInputStream.on('downloadProgress', progress => {
+            dataReadableStream.on('downloadProgress', progress => {
                 if (progressBar) {
                     progressBar.update(progress.transferred)
                 } else {
@@ -35,15 +35,17 @@ module.exports = async function downloadFile (url, opts = {}) {
                 }
             })
         }
-        dataInputStream
-            .once('error', error => {
-                fileOutputStream.close()
+        dataReadableStream
+        .once('error', error => {
+                // if the Readable stream emits an error during processing, the Writable destination is not closed automatically
+                // https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
+                fileWritableStream.close() 
                 fs.unlink(filePath, err => {
                     if (err) console.error(err)
                     reject(error)
                 })
             })
-            .pipe(fileOutputStream)
+            .pipe(fileWritableStream)
                 .on('close', () => {
                     if (cliProgress) {
                         downloadBars.update()
