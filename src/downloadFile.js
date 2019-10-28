@@ -23,11 +23,11 @@ module.exports = async function downloadFile(url, opts = {}) {
             let progressBar
             dataReadableStream.on('downloadProgress', progress => {
                 if (progressBar) {
-                    progressBar.update(progress.transferred | 0)
+                    progressBar.update(progress.transferred)
                 } else {
                     progressBar = downloadBars.create(
-                        progress.total | 0,
-                        progress.transferred | 0,
+                        progress.total,
+                        progress.transferred,
                         {
                             filename: path.basename(filePath)
                         }
