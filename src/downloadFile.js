@@ -10,7 +10,7 @@ const downloadBars = new _cliProgress.MultiBar({
     hideCursor: true
 }, _cliProgress.Presets.shades_grey)
 
-module.exports = async function downloadFile (url, opts = {}) {
+module.exports = async function downloadFile(url, opts = {}) {
     return new Promise((resolve, reject) => {
         let {
             cliProgress = true,
@@ -23,11 +23,11 @@ module.exports = async function downloadFile (url, opts = {}) {
             let progressBar
             dataReadableStream.on('downloadProgress', progress => {
                 if (progressBar) {
-                    progressBar.update(progress.transferred)
+                    progressBar.update(progress.transferred | 0)
                 } else {
                     progressBar = downloadBars.create(
-                        progress.total,
-                        progress.transferred,
+                        progress.total | 0,
+                        progress.transferred | 0,
                         {
                             filename: path.basename(filePath)
                         }
@@ -36,34 +36,34 @@ module.exports = async function downloadFile (url, opts = {}) {
             })
         }
         dataReadableStream
-        .once('error', error => {
+            .once('error', error => {
                 // if the Readable stream emits an error during processing, the Writable destination is not closed automatically
                 // https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
-                fileWritableStream.close() 
+                fileWritableStream.close()
                 fs.unlink(filePath, err => {
                     if (err) console.error(err)
                     reject(error)
                 })
             })
             .pipe(fileWritableStream)
-                .on('close', () => {
-                    if (cliProgress) {
-                        downloadBars.update()
-                    } else {
-                        console.log(`Downloaded file: ${filePath}\n\tfrom: ${url}`)
-                    }
-                    resolve()
-                })
-                
+            .once('finish', () => {
+                if (cliProgress) {
+                    downloadBars.update()
+                } else {
+                    console.log(`Downloaded file: ${filePath}\n\tfrom: ${url}`)
+                }
+                resolve()
+            })
+
     })
 }
 
-function filenameFromURL (url) {
+function filenameFromURL(url) {
     return url.toString().substr(url.lastIndexOf('/') + 1)
         .replace(/[\\/:*?"<>]+/gim, '-') // Windows reserved symbols
 }
 
-function uniqueFilePath (filePath) {
+function uniqueFilePath(filePath) {
     const {
         name,
         ext,
