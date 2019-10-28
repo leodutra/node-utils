@@ -2,6 +2,7 @@ const got = require('got')
 const _cliProgress = require('cli-progress')
 const fs = require('fs')
 const path = require('path')
+const { pipeline } = require('stream')
 
 const downloadBars = new _cliProgress.MultiBar({
     format: 'Downloading: {bar} {percentage}% | {filename} | ETA: {eta_formatted} | {value}/{total} bytes',
@@ -19,6 +20,17 @@ module.exports = async function downloadFile(url, opts = {}) {
         filePath = uniqueFilePath(filePath)
         const fileWritableStream = fs.createWriteStream(filePath)
         const dataReadableStream = got.stream(url)
+        const handleError = error => {
+            // if the Readable stream emits an error during processing, the Writable destination is not closed automatically
+            // https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
+            if (!fileWritableStream.writableEnded) {
+                fileWritableStream.end()
+            }
+            fs.unlink(filePath, err => {
+                if (err) console.error(err)
+                reject(error)
+            })
+        }
         if (cliProgress) {
             let progressBar
             dataReadableStream.on('downloadProgress', progress => {
@@ -35,26 +47,18 @@ module.exports = async function downloadFile(url, opts = {}) {
                 }
             })
         }
-        dataReadableStream
-            .once('error', error => {
-                // if the Readable stream emits an error during processing, the Writable destination is not closed automatically
-                // https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
-                fileWritableStream.close()
-                fs.unlink(filePath, err => {
-                    if (err) console.error(err)
-                    reject(error)
-                })
-            })
-            .pipe(fileWritableStream)
-            .once('finish', () => {
-                if (cliProgress) {
-                    downloadBars.update()
+        pipeline(
+            dataReadableStream,
+            fileWritableStream,
+            error => {
+                if (error) {
+                    handleError(error)
                 } else {
-                    console.log(`Downloaded file: ${filePath}\n\tfrom: ${url}`)
+                    downloadBars.update()
+                    resolve()
                 }
-                resolve()
-            })
-
+            }
+        )
     })
 }
 
