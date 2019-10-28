@@ -17,7 +17,7 @@ module.exports = async function downloadFile (url, opts = {}) {
             filePath = filenameFromURL(url)
         } = opts
         filePath = uniqueFilePath(filePath)
-        const fileOutputStream = fs.createWriteStream(filePath, { flags: 'ax' })
+        const fileOutputStream = fs.createWriteStream(filePath)
         const dataInputStream = got.stream(url)
         if (cliProgress) {
             let progressBar
