@@ -37,9 +37,9 @@ module.exports = async function downloadFile (url, opts = {}) {
         }
         dataInputStream
             .once('error', error => {
+                fileOutputStream.close()
                 fs.unlink(filePath, err => {
                     if (err) console.error(err)
-                    fileOutputStream.close()
                     reject(error)
                 })
             })
