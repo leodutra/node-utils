@@ -13,8 +13,8 @@ const progressBars = new _cliProgress.MultiBar({
 
 module.exports = async function downloadProgress(urls, opts = {}) {
     opts = {
-        dest = './',
-        progressUpdateInterval = 50,
+        dest: './',
+        progressUpdateInterval: 50,
         ...opts
     }
     const downloads = []
@@ -27,7 +27,7 @@ module.exports = async function downloadProgress(urls, opts = {}) {
                 const downloadContext = { filePath, downloadWorker, progressBar: null }
                 downloads.push(downloadContext)
                 downloadWorker.on('progress', ({ totalBytes, downloadedBytes, bytesPerSecond, state }) => {
-                    if (totalBytes) {
+                    if (totalBytes && bytesPerSecond) {
                         const speed = utils.dynamicSpeedUnitDisplay(bytesPerSecond, 2)
                         if (downloadContext.progressBar) {
                             downloadContext.progressBar.update(
@@ -47,7 +47,17 @@ module.exports = async function downloadProgress(urls, opts = {}) {
                         }
                     }
                 })
-                downloadWorker.on('end', resolve)
+                downloadWorker.on('end', () => {
+                    if (downloadContext.progressBar) {
+                        const { totalBytes, bytesPerSecond } = downloadWorker.getProgress()
+                        const speed = utils.dynamicSpeedUnitDisplay(bytesPerSecond, 2)
+                        downloadContext.progressBar.update(
+                            utils.byteToKb(totalBytes),
+                            { speed: '0 b/s', state: 'done' }
+                        )
+                    }
+                    resolve()
+                })
                 downloadWorker.on('error', reject)
                 downloadWorker.start()
             })
