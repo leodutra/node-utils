@@ -1,71 +1,61 @@
-// const download = require('download')
 const _cliProgress = require('cli-progress')
 const fs = require('fs')
 const path = require('path')
-const util = require('util')
-const stream = require('stream')
-const pipeline = util.promisify(stream.pipeline)
-const request = require('request')
+const { DownloadWorker, utils } = require('rapid-downloader')
 
 const progressBars = new _cliProgress.MultiBar({
-    format: 'Downloading: {bar} {percentage}% | {filename} | ETA: {eta_formatted} | {value}/{total} bytes',
+    format: 'Downloading: {bar} {percentage}% | {filename} | ETA: {eta_formatted} | {value}/{total} kB | {speed} | {state}',
     stopOnComplete: true,
     clearOnComplete: false,
     hideCursor: true
 }, _cliProgress.Presets.shades_grey)
 
+
 module.exports = async function downloadProgress(urls, opts = {}) {
-    const {
-        dest = './'
-    } = opts
+    opts = {
+        dest = './',
+        progressUpdateInterval = 50,
+        ...opts
+    }
     const downloads = []
     return Promise.all(
-        urls.map(async x => {
-            const url = typeof x === 'object' ? x.url : x
-            const filePath = uniqueFilePath(path.relative(dest, x.filePath || filenameFromURL(url)))
-            const fileStream = fs.createWriteStream(filePath)
-            const downstream = await getStream(url)
-            const downloadContext = { filePath, fileStream, downstream, progressBar: null }
-            downloads.push(downloadContext)
-            const downloadSize = downstream.headers['content-length']
-            let downloadedBytes = 0
-            const transform = new stream.Transform({
-                transform(chunk, encoding, callback) {
-                    process.nextTick(() => {
-                        downloadedBytes += Buffer.byteLength(chunk)
-                        if (downloadSize) {
-                            if (downloadContext.progressBar) {
-                                downloadContext.progressBar.update(downloadedBytes)
-                            } else {
-                                downloadContext.progressBar = progressBars.create(
-                                    downloadSize,
-                                    downloadedBytes,
-                                    {
-                                        filename: path.basename(filePath)
-                                    }
-                                )
-                            }
+        urls.map(x =>
+            new Promise((resolve, reject) => {
+                const url = typeof x === 'object' ? x.url : x
+                const filePath = uniqueFilePath(path.relative(opts.dest, x.filePath || filenameFromURL(url)))
+                const downloadWorker = new DownloadWorker(url, filePath, opts)
+                const downloadContext = { filePath, downloadWorker, progressBar: null }
+                downloads.push(downloadContext)
+                downloadWorker.on('progress', ({ totalBytes, downloadedBytes, bytesPerSecond, state }) => {
+                    if (totalBytes) {
+                        const speed = utils.dynamicSpeedUnitDisplay(bytesPerSecond, 2)
+                        if (downloadContext.progressBar) {
+                            downloadContext.progressBar.update(
+                                utils.byteToKb(downloadedBytes),
+                                { speed, state }
+                            )
+                        } else {
+                            downloadContext.progressBar = progressBars.create(
+                                utils.byteToKb(totalBytes),
+                                utils.byteToKb(downloadedBytes),
+                                {
+                                    filename: path.basename(filePath),
+                                    speed,
+                                    state
+                                }
+                            )
                         }
-                    })
-                    callback()
-                }
+                    }
+                })
+                downloadWorker.on('end', resolve)
+                downloadWorker.on('error', reject)
+                downloadWorker.start()
             })
-            downstream.on('error', console.error)
-            return pipeline(
-                downstream,
-                transform,
-                fileStream
-            )
-        })
+        )
     ).catch(async error => {
         await Promise.all(downloads.map(
-            ({ filePath, fileStream, downstream, progressBar }) => {
-                if (!downstream.destroyed) {
-                    downstream.destroy()
-                }
-                if (!fileStream.destroyed) {
-                    fileStream.destroy()
-                }
+            ({ filePath, downloadWorker, progressBar }) => {
+                downloadWorker.stop()
                 if (progressBar) {
                     progressBars.remove(progressBar)
                 }
@@ -76,14 +66,6 @@ module.exports = async function downloadProgress(urls, opts = {}) {
         throw error
     })
 }
-
-async function getStream(url) {
-    return new Promise((resolve, reject) => 
-        request(url)
-            .on('response', resolve)
-            .on('error', reject)
-    )
-} 
 
 function filenameFromURL(url) {
     return url.toString().substr(url.lastIndexOf('/') + 1)
