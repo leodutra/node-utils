@@ -2,7 +2,7 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fleodutra%2Fnode-utils.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fleodutra%2Fnode-utils?ref=badge_shield)
 
 
-Some very basic "extended utils" library for rapid prototyping.
+Some very basic personal utils library, for rapid prototyping.
 
 
 ## License
