@@ -2,10 +2,22 @@
   "name": "node-utils",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"lib/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "precommit": "npm run build && npm run format"
   },
+  "files": [
+    "lib/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leodutra/node-utils.git"
@@ -17,14 +29,26 @@
   },
   "homepage": "https://github.com/leodutra/node-utils#readme",
   "devDependencies": {
-    "eslint": "^6.1.0",
-    "eslint-config-standard": "^13.0.1",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "@types/jest": "^24.0.23",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "prettier": "^1.19.1",
+    "ts-jest": "^24.2.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0"
   },
   "dependencies": {
+    "@types/base-x": "^3.0.6",
+    "@types/bcrypt": "^3.0.0",
+    "@types/cli-progress": "^1.8.1",
+    "@types/deep-freeze": "^0.1.2",
+    "@types/dotenv": "^8.2.0",
+    "@types/download": "^6.2.4",
+    "@types/jsonwebtoken": "^8.3.5",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node": "^12.12.14",
+    "@types/rimraf": "^2.0.3",
+    "@types/uuid": "^3.4.6",
     "base-x": "^3.0.7",
     "bcrypt": "^3.0.6",
     "cli-progress": "^3.3.1",
@@ -39,6 +63,7 @@
     "require-dir": "^1.2.0",
     "rimraf": "^3.0.0",
     "simpleflakes": "^2.1.0",
+    "typescript": "^3.7.2",
     "uuid": "^3.3.3"
   }
 }
