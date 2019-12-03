@@ -1,1 +1,1 @@
-export default function toUnicode(str: any): any;
+export default function toUnicode(str: any): string;

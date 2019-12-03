@@ -1,1 +1,1 @@
-export default function trimToLower(str: string): string;
+export default function trimToLower(str: any): string;

@@ -1,1 +1,1 @@
-export default function toCharEntity(str: string, toHex: boolean): string;
+export default function toCharEntity(str: any, toHex: boolean): string;

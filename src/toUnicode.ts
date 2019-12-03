@@ -7,6 +7,6 @@ export default function toUnicode(str: any) {
         }
         return result
     } else {
-        return str
+        return ''
     }
 }

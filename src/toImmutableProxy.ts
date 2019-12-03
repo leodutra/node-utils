@@ -1,16 +1,16 @@
-export default function toImmutableProxy(proxyTarget: any): any {
+export default function toImmutableProxy<T extends object>(proxyTarget: T): T | (T & Function) {
     switch (typeof proxyTarget) {
         case 'object':
         case 'function':
             return new Proxy(proxyTarget, {
-                set: function immutableProxySet(target, prop) {
+                set(target, prop) {
                     throw new Error('Cannot set property "' + prop.toString() + '", this object is immutable.')
                 },
-
-                get: function immutableProxyGet(target, prop) {
+                get(target: any, prop) {
                     return toImmutableProxy(target[prop])
                 },
             })
+        default:
+            return proxyTarget
     }
-    return proxyTarget
 }
