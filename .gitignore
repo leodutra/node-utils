@@ -67,4 +67,4 @@ typings/
 .next
 
 # ignore built files
-lib/
+# lib/
