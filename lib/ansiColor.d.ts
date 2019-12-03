@@ -1,0 +1,38 @@
+declare function ansiColor(codes: number[], input: string): string;
+declare namespace ansiColor {
+    var Black: (input: string) => string;
+    var Red: (input: string) => string;
+    var Green: (input: string) => string;
+    var Yellow: (input: string) => string;
+    var Blue: (input: string) => string;
+    var Magenta: (input: string) => string;
+    var Cyan: (input: string) => string;
+    var White: (input: string) => string;
+    var Gray: (input: string) => string;
+    var Grey: (input: string) => string;
+    var BgBlack: (input: string) => string;
+    var BgRed: (input: string) => string;
+    var BgGreen: (input: string) => string;
+    var BgYellow: (input: string) => string;
+    var BgBlue: (input: string) => string;
+    var BgMagenta: (input: string) => string;
+    var BgCyan: (input: string) => string;
+    var BgWhite: (input: string) => string;
+    var BlackBright: (input: string) => string;
+    var RedBright: (input: string) => string;
+    var GreenBright: (input: string) => string;
+    var YellowBright: (input: string) => string;
+    var BlueBright: (input: string) => string;
+    var MagentaBright: (input: string) => string;
+    var CyanBright: (input: string) => string;
+    var WhiteBright: (input: string) => string;
+    var BgBlackBright: (input: string) => string;
+    var BgRedBright: (input: string) => string;
+    var BgGreenBright: (input: string) => string;
+    var BgYellowBright: (input: string) => string;
+    var BgBlueBright: (input: string) => string;
+    var BgMagentaBright: (input: string) => string;
+    var BgCyanBright: (input: string) => string;
+    var BgWhiteBright: (input: string) => string;
+}
+export default ansiColor;

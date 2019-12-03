@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
@@ -13,7 +14,7 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "precommit": "npm run build && npm run format"
+    "precommit": "npm run build && npm run format && git add -A"
   },
   "files": [
     "lib/**/*"
