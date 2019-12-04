@@ -7,7 +7,7 @@ const decodeTable: { [key: string]: string } = {
     'apos': "'",
     'gt': '>',
     'lt': '<',
-    'nbsp': ' ',
+    'nbsp': '\u0020',
     'quot': '"',
 }
 
