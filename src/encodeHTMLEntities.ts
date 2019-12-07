@@ -8,8 +8,10 @@ const encodeTable: { [key: string]: string } = {
     '>': 'gt;',
 }
 
-const matcher = (match: string): string => '&' + encodeTable[match]
+const matcher = (match: string) => '&' + encodeTable[match]
 
-export default function encodeHTMLEntities(html: string = '') {
-    return html.replace(/[<>&\r\n"']/gm, matcher)
+export default function encodeHTMLEntities(html: any) {
+    return typeof html === 'string'
+        ? html.replace(/[<>&\r\n"']/gm, matcher)
+        : ''
 }

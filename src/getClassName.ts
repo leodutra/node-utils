@@ -3,7 +3,7 @@ export default function getClassName(target: any): string | null | undefined {
         case 'number':
             return isNaN(target) ? 'NaN' : 'Number'
         case 'undefined':
-            return void 0
+            return 'undefined'
         case 'string':
         case 'function':
         case 'boolean':
@@ -11,6 +11,8 @@ export default function getClassName(target: any): string | null | undefined {
         case 'symbol':
         default:
         case 'object':
-            return target == null ? null : Object.getPrototypeOf(target).constructor.name
+            return target === null
+                ? 'null'
+                : Object.getPrototypeOf(target).constructor.name
     }
 }

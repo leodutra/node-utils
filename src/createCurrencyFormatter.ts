@@ -16,5 +16,7 @@ export default function createCurrencyFormatter({
     const defDecimal = decimal
     // tslint:disable-next-line: no-shadowed-variable
     return (num: number, decimal = defDecimal) =>
-        num || num === 0 ? `${lSymbol}${numf(num, decimal, decPoint, thousandsSep)}${rSymbol}` : '-'
+        num || num === 0
+            ? `${lSymbol}${numf(num, decimal, decPoint, thousandsSep)}${rSymbol}`
+            : '-'
 }

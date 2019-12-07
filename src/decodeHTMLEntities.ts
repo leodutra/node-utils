@@ -11,8 +11,10 @@ const decodeTable: { [key: string]: string } = {
     'quot': '"',
 }
 
-const matcher = (match: string, entity: string): string => decodeTable[entity] || match
+const matcher = (match: string, entity: string) => decodeTable[entity] || match
 
-export default function decodeHTMLEntities(str: string = ''): string {
-    return str.replace(/&([^;]+);/gm, matcher)
+export default function decodeHTMLEntities(str: any) {
+    return typeof str === 'string'
+        ? str.replace(/&([^;]+);/gm, matcher)
+        : ''
 }
