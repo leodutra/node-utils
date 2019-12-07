@@ -14,7 +14,7 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "precommit": "npm run build && npm run format && git add src/* && git add lib/*"
+    "precommit": "npm run build && npm run format && git add src/* && git add lib/* && git commit --amend"
   },
   "files": [
     "lib/**/*"

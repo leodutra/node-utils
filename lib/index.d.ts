@@ -38,7 +38,7 @@ export { default as randomBase62 } from './randomBase62';
 export { default as randomInRange } from './randomInRange';
 export { default as readFile } from './readFile';
 export { default as removeDiacritics } from './removeDiacritics';
-export { default as replaceHTMLTags } from './replaceHTMLTags';
+export { default as htmlToText } from './htmlToText';
 export { default as requireEnvVar } from './requireEnvVar';
 export { default as rimraf } from './rimraf';
 export { default as rotateArray } from './rotateArray';
