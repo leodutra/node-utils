@@ -1,1 +1,1 @@
-export default function urlExtension(url: any): string | null;
+export default function urlExtension(url: any): string;

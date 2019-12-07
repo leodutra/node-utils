@@ -11,7 +11,5 @@ const encodeTable: { [key: string]: string } = {
 const matcher = (match: string) => '&' + encodeTable[match]
 
 export default function encodeHTMLEntities(html: any) {
-    return typeof html === 'string'
-        ? html.replace(/[<>&\r\n"']/gm, matcher)
-        : ''
+    return typeof html === 'string' ? html.replace(/[<>&\r\n"']/gm, matcher) : ''
 }

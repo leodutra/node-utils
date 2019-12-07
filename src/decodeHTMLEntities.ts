@@ -14,7 +14,5 @@ const decodeTable: { [key: string]: string } = {
 const matcher = (match: string, entity: string) => decodeTable[entity] || match
 
 export default function decodeHTMLEntities(str: any) {
-    return typeof str === 'string'
-        ? str.replace(/&([^;]+);/gm, matcher)
-        : ''
+    return typeof str === 'string' ? str.replace(/&([^;]+);/gm, matcher) : ''
 }

@@ -1,1 +1,1 @@
-export default function decodeHTMLEntities(str?: string): string;
+export default function decodeHTMLEntities(str: any): string;
