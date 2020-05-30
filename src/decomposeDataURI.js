@@ -1,4 +1,4 @@
-function decomposeDataURI(dataURI) {
+module.exports = function decomposeDataURI(dataURI) {
     const [, mimeType = null, encoding = null, data] = dataURI.match(
         /^data:((?:[^,](?!,|;base64))*[^,])?(?:;(base64))?,(.+)/im
     )
