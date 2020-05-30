@@ -10,6 +10,7 @@ module.exports = {
     comparePassword: require('./src/comparePassword'),
     createCurrencyFormatter: require('./src/createCurrencyFormatter'),
     decodeHTMLEntities: require('./src/decodeHTMLEntities'),
+    decomposeDataURI: require('./src/decomposeDataURI'),
     deepFreeze: require('./src/deepFreeze'),
     download: require('./src/download'),
     downloadProgress: require('./src/downloadProgress'),
