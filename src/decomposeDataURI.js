@@ -1,6 +1,10 @@
 module.exports = function decomposeDataURI(dataURI) {
-    const [, mimeType = null, encoding = null, data] = dataURI.match(
+    const match = dataURI.match(
         /^data:((?:[^,](?!,|;base64))*[^,])?(?:;(base64))?,(.+)/im
     )
-    return { mimeType, encoding, data, dataURI }
+    if (match) {
+        const [, mimeType = null, encoding = null, data] = match
+        return { mimeType, encoding, data, dataURI }
+    }
+    return null
 }
