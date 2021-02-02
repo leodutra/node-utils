@@ -6,6 +6,7 @@ module.exports = {
     buildJwt: require('./src/buildJwt'),
     bytesToStr: require('./src/bytesToStr'),
     celsiusToKelvin: require('./src/celsiusToKelvin'),
+    chunkSubstr: require('./src/chunkSubstr'),
     clamp: require('./src/clamp'),
     comparePassword: require('./src/comparePassword'),
     createCurrencyFormatter: require('./src/createCurrencyFormatter'),
