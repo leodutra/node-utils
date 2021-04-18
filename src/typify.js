@@ -1,17 +1,23 @@
 const getClassName = require('./getClassName')
 
 module.exports = function typify(any, opts = {}) {
-    const { ownProperties = false, expandObj = true } = opts
+    const { ownProperties = false, expandObj = true, expandArray = true } = opts
     const t = getClassName(any)
-    if (any && typeof any === 'object' && t !== 'Array' && t !== 'RegExp') {
-        const result = {}
-        for (const prop in any) {
-            if (ownProperties && !Object.prototype.hasOwnProperty.call(any, prop)) {
-                continue
+    if (any && typeof any === 'object' && t !== 'RegExp') {
+        if (t === 'Array') {
+            if (expandArray) {
+                return any.map(x => typify(x, opts))
             }
-            result[prop] = expandObj ? typify(any[prop], opts) : getClassName(any[prop])
+        } else {
+            const result = {}
+            for (const prop in any) {
+                if (ownProperties && !Object.prototype.hasOwnProperty.call(any, prop)) {
+                    continue
+                }
+                result[prop] = expandObj ? typify(any[prop], opts) : getClassName(any[prop])
+            }
+            return result
         }
-        return result
     }
     return t
 }
