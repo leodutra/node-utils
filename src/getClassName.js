@@ -1,3 +1,4 @@
+// TODO: rename jsClassName
 function getClassName (any) {
     switch (typeof any) {
     case 'number':
